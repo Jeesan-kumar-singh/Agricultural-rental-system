@@ -1,0 +1,299 @@
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.admin-header-bar {
+  background-color: var(--surface);
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 6px solid var(--accent);
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.header-text h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+
+.header-text p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.header-stats-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.stat-card {
+  background-color: var(--primary-light);
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+}
+
+.stat-card-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.stat-card-val {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  line-height: 1.1;
+}
+
+.stat-card-val.alert-val {
+  color: var(--accent);
+}
+
+.section-action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-action-row h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Add equipment listing Form styles */
+.add-eq-form-card {
+  background-color: var(--surface);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.add-eq-form-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 1.25rem;
+  border-bottom: 1.5px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-row-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.text-area-desc {
+  resize: vertical;
+}
+
+.animate-slide {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Inventory List card styles */
+.inventory-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.inventory-list-card {
+  background-color: var(--surface);
+  padding: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.inv-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inv-cat-icon {
+  font-size: 2.25rem;
+  background-color: var(--primary-light);
+  width: 54px;
+  height: 54px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--border-radius-sm);
+}
+
+.inv-meta h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.inv-category-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  display: block;
+}
+
+.inv-controls {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.toggle-switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toggle-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.toggle-status-btn {
+  background-color: var(--border);
+  color: var(--text-secondary);
+  border: none;
+  padding: 6px 14px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.toggle-status-btn.active {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.delete-btn {
+  padding: 0.4rem 0.8rem !important;
+}
+
+/* Requests table styling */
+.requests-table-wrapper {
+  overflow-x: auto;
+}
+
+.requests-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 800px;
+}
+
+.requests-table th {
+  background-color: var(--input-bg);
+  padding: 1rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  border-bottom: 1.5px solid var(--border);
+}
+
+.requests-table td {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+  vertical-align: middle;
+}
+
+.renter-cell, .eq-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.renter-email, .eq-cat {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.dates-col {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+}
+
+.bill-cost {
+  color: var(--primary-dark);
+  font-size: 1rem;
+}
+
+.approval-actions-group {
+  display: flex;
+  gap: 8px;
+}
+
+.approve-btn {
+  padding: 0.4rem 0.8rem !important;
+  font-size: 0.8rem !important;
+}
+
+.reject-btn, .complete-btn {
+  padding: 0.4rem 0.8rem !important;
+  font-size: 0.8rem !important;
+}
+
+.no-actions {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.empty-dashboard {
+  padding: 4rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .form-row-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .inv-controls {
+    width: 100%;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+}

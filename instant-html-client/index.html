@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Affordable agricultural equipment rental platform linking farmers with equipment owners.">
+  <title>AgriRent | Agricultural Equipment Rental Management</title>
+  
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Responsive Header Navigation -->
+    <header class="main-header">
+      <div class="header-container">
+        <a href="#" class="logo-section" onclick="navigateTo('catalog')">
+          <span class="logo-icon">🚜</span>
+          <span class="logo-text">Agri<span class="accent-text">Rent</span></span>
+        </a>
+
+        <nav class="desktop-nav">
+          <a href="#" class="nav-link active" id="nav-catalog" onclick="navigateTo('catalog')">Catalog</a>
+          <a href="#" class="nav-link hidden" id="nav-farmer" onclick="navigateTo('farmer-dashboard')">My Rentals</a>
+          <a href="#" class="nav-link hidden" id="nav-owner" onclick="navigateTo('owner-dashboard')">Owner Dashboard</a>
+          
+          <div class="user-nav-group hidden" id="user-profile-section">
+            <span class="user-welcome">
+              Hello, <strong id="header-user-name">User</strong>
+              <span class="role-tag" id="header-user-role">Farmer</span>
+            </span>
+            <button onclick="handleLogout()" class="btn btn-secondary btn-sm">Logout</button>
+          </div>
+          
+          <div class="auth-nav-group" id="auth-buttons-section">
+            <a href="#" onclick="navigateTo('login')" class="btn btn-secondary">Login</a>
+            <a href="#" onclick="navigateTo('register')" class="btn btn-primary">Join us</a>
+          </div>
+        </nav>
+
+        <button class="mobile-menu-toggle" id="mobile-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <!-- Mobile Navigation Drawer -->
+      <div class="mobile-nav-panel hidden" id="mobile-nav-panel">
+        <nav class="mobile-nav">
+          <a href="#" class="mobile-nav-link" onclick="navigateTo('catalog')">Catalog</a>
+          <a href="#" class="mobile-nav-link hidden" id="mob-nav-farmer" onclick="navigateTo('farmer-dashboard')">My Rentals</a>
+          <a href="#" class="mobile-nav-link hidden" id="mob-nav-owner" onclick="navigateTo('owner-dashboard')">Owner Dashboard</a>
+          
+          <div class="mobile-user-section hidden" id="mobile-profile-section">
+            <div class="mobile-user-details">
+              <span class="mobile-user-name" id="mob-user-name">User</span>
+              <span class="mobile-user-role" id="mob-user-role">Farmer</span>
+            </div>
+            <button onclick="handleLogout()" class="btn btn-secondary full-width">Logout</button>
+          </div>
+          
+          <div class="mobile-auth-section" id="mobile-auth-section">
+            <a href="#" onclick="navigateTo('login')" class="btn btn-secondary full-width">Login</a>
+            <a href="#" onclick="navigateTo('register')" class="btn btn-primary full-width">Join us</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Dynamic Content Views -->
+    <main class="content">
+      
+      <!-- VIEW 1: CATALOG / HOME -->
+      <section id="view-catalog" class="view">
+        <div class="home-container">
+          <div class="hero-banner">
+            <div class="hero-content">
+              <h1>Modern Agricultural Equipment, <span class="highlight">Rented Locally</span></h1>
+              <p>Get high-grade tractors, harvesters, and tools directly from local owners. Save capital overheads and optimize production.</p>
+            </div>
+          </div>
+
+          <div class="catalog-section">
+            <div class="catalog-header-bar">
+              <h2>Browse Available Inventory</h2>
+              <button class="btn btn-secondary btn-sm" onclick="resetFilters()">Clear Filters</button>
+            </div>
+
+            <!-- Filters form -->
+            <form onsubmit="handleSearch(event)" class="filters-form card">
+              <div class="filter-input-group search-input">
+                <label class="form-label" for="search-bar">Search Listings</label>
+                <div class="search-field-wrapper">
+                  <input id="search-bar" type="text" class="form-control" placeholder="e.g. John Deere, Harvester, Plow...">
+                  <button type="submit" class="btn btn-primary search-action-btn">Search</button>
+                </div>
+              </div>
+
+              <div class="filter-input-group">
+                <label class="form-label" for="category-select">Category</label>
+                <select id="category-select" class="form-control" onchange="fetchCatalog()">
+                  <option value="">All Categories</option>
+                  <option value="Tractors">Tractors</option>
+                  <option value="Harvesters">Harvesters</option>
+                  <option value="Plows & Tillage">Plows & Tillage</option>
+                  <option value="Planting & Seeding">Planting & Seeding</option>
+                  <option value="Other tools">Other tools</option>
+                </select>
+              </div>
+
+              <div class="filter-input-group">
+                <label class="form-label" for="price-filter">Max Daily Rate ($)</label>
+                <input id="price-filter" type="number" min="0" class="form-control" placeholder="e.g. 250" oninput="fetchCatalog()">
+              </div>
+            </form>
+
+            <div id="catalog-error" class="alert alert-danger hidden"></div>
+            <div id="catalog-loading" class="spinner-container"><div class="spinner"></div></div>
+            <div id="catalog-grid" class="equipment-grid grid grid-cols-3 hidden"></div>
+            <div id="catalog-empty" class="empty-state-box card hidden">
+              <span class="empty-emoji">🌾</span>
+              <h3>No equipment found</h3>
+              <p>Try refining your search queries or category filters to explore more machinery listings.</p>
+              <button class="btn btn-primary btn-sm" onclick="resetFilters()">View All Listings</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 2: EQUIPMENT DETAIL -->
+      <section id="view-detail" class="view hidden">
+        <div class="detail-container">
+          <a href="#" class="back-link" onclick="navigateTo('catalog')">← Back to Catalog</a>
+          <div id="detail-error" class="alert alert-danger hidden"></div>
+          
+          <div class="detail-grid" id="detail-content">
+            <!-- Left Info Panel -->
+            <div class="details-info-section card">
+              <div class="details-image-wrapper">
+                <div class="details-fallback-image">
+                  <span class="details-fallback-emoji" id="detail-emoji">🚜</span>
+                </div>
+              </div>
+              <div class="details-body">
+                <span class="details-category" id="detail-category">Tractors</span>
+                <h1 class="details-title" id="detail-title">John Deere Tractor</h1>
+                <div class="details-meta-row">
+                  <span class="badge badge-success" id="detail-status">Available for Rent</span>
+                  <span class="details-owner-text">Owner: <strong id="detail-owner">Owner</strong></span>
+                </div>
+                <div class="details-description">
+                  <h3>Description</h3>
+                  <p id="detail-desc">No specifications provided.</p>
+                </div>
+                <div class="details-specifications">
+                  <h3>Technical Specs</h3>
+                  <ul class="spec-list">
+                    <li><strong>Power Source:</strong> Diesel Engine / Heavy duty</li>
+                    <li><strong>Category:</strong> <span id="detail-spec-cat">Tractors</span></li>
+                    <li><strong>Owner Contacts:</strong> <span id="detail-spec-email">Verified Owner</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Right Booking Sticky Panel -->
+            <div class="booking-panel-section">
+              <div class="booking-sticky-card card">
+                <div class="booking-price-header">
+                  <h2>$<span id="detail-rate">0.00</span> <span class="price-unit">/ day</span></h2>
+                </div>
+                <div class="booking-card-body">
+                  <div id="booking-error" class="alert alert-danger hidden"></div>
+                  <div id="booking-success" class="alert alert-success hidden"></div>
+                  
+                  <div id="booking-unauthenticated" class="booking-notice info hidden">
+                    <p><strong>Renter account required:</strong> Please login with a farmer account to submit a rental booking request.</p>
+                    <button onclick="navigateTo('login')" class="btn btn-primary full-width mt-3">Go to Login</button>
+                  </div>
+                  
+                  <div id="booking-restricted-owner" class="booking-notice warning hidden">
+                    <p><strong>Note:</strong> You listed this equipment. You cannot rent your own machinery.</p>
+                  </div>
+
+                  <div id="booking-unavailable" class="booking-notice danger hidden">
+                    <p><strong>Currently Rented:</strong> This equipment is booked and unavailable.</p>
+                  </div>
+
+                  <form id="booking-form" onsubmit="handleBookingRequest(event)" class="booking-form">
+                    <div class="form-group">
+                      <label class="form-label" for="booking-start">Pickup Date</label>
+                      <input id="booking-start" type="date" class="form-control" onchange="calculateRentalCost()" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="booking-end">Return Date</label>
+                      <input id="booking-end" type="date" class="form-control" onchange="calculateRentalCost()" required>
+                    </div>
+                    
+                    <div id="pricing-summary" class="pricing-summary-container hidden">
+                      <div class="summary-row">
+                        <span>Daily Rental Rate</span>
+                        <span>$<span id="summary-daily-rate">0.00</span></span>
+                      </div>
+                      <div class="summary-row">
+                        <span>Total Rental Period</span>
+                        <span><span id="summary-days">0</span> days</span>
+                      </div>
+                      <hr class="summary-divider">
+                      <div class="summary-row total">
+                        <span>Estimated Total Cost</span>
+                        <span class="total-amount">$<span id="summary-total-cost">0.00</span></span>
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-accent full-width booking-submit-btn" id="booking-submit-btn">
+                      Request Rental
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: LOGIN -->
+      <section id="view-login" class="view hidden">
+        <div class="auth-page-container">
+          <div class="auth-card card">
+            <div class="auth-header">
+              <span class="auth-logo">🚜</span>
+              <h2>Welcome back</h2>
+              <p>Login to manage bookings and equipment</p>
+            </div>
+            <div id="login-error" class="alert alert-danger hidden"></div>
+            <form onsubmit="handleLoginSubmit(event)" class="auth-form">
+              <div class="form-group">
+                <label class="form-label" for="login-email">Email Address</label>
+                <input id="login-email" type="email" class="form-control" placeholder="e.g. farmer@gmail.com" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="login-password">Password</label>
+                <input id="login-password" type="password" class="form-control" placeholder="Enter secure password" required>
+              </div>
+              <button type="submit" class="btn btn-primary auth-submit-btn" id="login-btn">Login</button>
+            </form>
+            <div class="auth-footer">
+              <p>New to AgriRent? <a href="#" onclick="navigateTo('register')" class="auth-link">Create an account</a></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 4: REGISTER -->
+      <section id="view-register" class="view hidden">
+        <div class="auth-page-container">
+          <div class="auth-card card">
+            <div class="auth-header">
+              <span class="auth-logo">🌱</span>
+              <h2>Join AgriRent</h2>
+              <p>Optimize your farm operations today</p>
+            </div>
+            <div id="register-error" class="alert alert-danger hidden"></div>
+            <div id="register-success" class="alert alert-success hidden"></div>
+            <form onsubmit="handleRegisterSubmit(event)" class="auth-form">
+              <div class="form-group">
+                <label class="form-label" for="reg-name">Full Name</label>
+                <input id="reg-name" type="text" class="form-control" placeholder="e.g. Jeesan Singh" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-email">Email Address</label>
+                <input id="reg-email" type="email" class="form-control" placeholder="e.g. jeesan@gmail.com" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="reg-password">Password</label>
+                <input id="reg-password" type="password" class="form-control" placeholder="Choose secure password" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">I want to...</label>
+                <div class="role-selector-grid">
+                  <div class="role-option selected" id="role-farmer" onclick="selectRegisterRole('farmer')">
+                    <span class="role-emoji">🌾</span>
+                    <span class="role-title">Rent Tools</span>
+                    <span class="role-desc">I am a Farmer</span>
+                  </div>
+                  <div class="role-option" id="role-owner" onclick="selectRegisterRole('owner')">
+                    <span class="role-emoji">🚜</span>
+                    <span class="role-title">List Tools</span>
+                    <span class="role-desc">I own Equipment</span>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary auth-submit-btn" id="register-btn">Create Account</button>
+            </form>
+            <div class="auth-footer">
+              <p>Already have an account? <a href="#" onclick="navigateTo('login')" class="auth-link">Login</a></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 5: FARMER DASHBOARD -->
+      <section id="view-farmer-dashboard" class="view hidden">
+        <div class="dashboard-container">
+          <div class="dashboard-header card">
+            <div class="dashboard-header-text">
+              <h1>My Farmer Dashboard</h1>
+              <p>Track your equipment bookings, active machinery rentals, and billing details.</p>
+            </div>
+            <div class="dashboard-stat-bubble">
+              <span class="stat-label">Active Bookings</span>
+              <span class="stat-value" id="farmer-active-count">0</span>
+            </div>
+          </div>
+          <div id="farmer-error" class="alert alert-danger hidden"></div>
+          <div class="rentals-list-section">
+            <h2>My Rental History</h2>
+            <div id="farmer-table-container" class="rentals-table-wrapper card">
+              <table class="rentals-table">
+                <thead>
+                  <tr>
+                    <th>Equipment</th>
+                    <th>Category</th>
+                    <th>Rental Period</th>
+                    <th>Total Cost</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="farmer-rentals-tbody"></tbody>
+              </table>
+            </div>
+            <div id="farmer-empty" class="empty-state card hidden">
+              <span class="empty-emoji">🚜</span>
+              <h3>No bookings yet</h3>
+              <p>You haven't requested any agricultural equipment bookings yet.</p>
+              <button class="btn btn-primary btn-sm mt-2" onclick="navigateTo('catalog')">Explore Equipment Catalog</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 6: OWNER/ADMIN DASHBOARD -->
+      <section id="view-owner-dashboard" class="view hidden">
+        <div class="dashboard-container">
+          <div class="admin-header-bar card">
+            <div class="header-text">
+              <h1>Equipment Owner Dashboard</h1>
+              <p>Manage your listed agricultural machinery and approve incoming rental requests.</p>
+            </div>
+            <div class="header-stats-row">
+              <div class="stat-card">
+                <span class="stat-card-label">My Listings</span>
+                <span class="stat-card-val" id="owner-listings-count">0</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-card-label">Pending Requests</span>
+                <span class="stat-card-val alert-val" id="owner-pending-count">0</span>
+              </div>
+            </div>
+          </div>
+          
+          <div id="owner-error" class="alert alert-danger hidden"></div>
+          
+          <div class="tab-container">
+            <button class="tab-btn active" id="tab-inventory" onclick="switchOwnerTab('inventory')">My Listed Equipment</button>
+            <button class="tab-btn" id="tab-requests" onclick="switchOwnerTab('requests')">Rental Requests</button>
+          </div>
+
+          <!-- Inventory Tab panel -->
+          <div id="panel-inventory">
+            <div class="section-action-row">
+              <h2>Active Listings</h2>
+              <button class="btn btn-primary btn-sm" onclick="toggleAddEquipmentForm()">+ Add New Equipment</button>
+            </div>
+
+            <!-- Add Listing Dialog Card -->
+            <div class="add-eq-form-card card hidden animate-slide" id="add-equipment-form-box">
+              <h3>List New Agricultural Equipment</h3>
+              <div id="add-eq-error" class="alert alert-danger hidden"></div>
+              <div id="add-eq-success" class="alert alert-success hidden"></div>
+              <form onsubmit="handleAddEquipmentSubmit(event)" class="add-form">
+                <div class="form-row-grid">
+                  <div class="form-group">
+                    <label class="form-label" for="add-name">Equipment Name</label>
+                    <input id="add-name" type="text" class="form-control" placeholder="e.g. John Deere Tractor" required>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="add-category">Category</label>
+                    <select id="add-category" class="form-control">
+                      <option value="Tractors">Tractors</option>
+                      <option value="Harvesters">Harvesters</option>
+                      <option value="Plows & Tillage">Plows & Tillage</option>
+                      <option value="Planting & Seeding">Planting & Seeding</option>
+                      <option value="Other tools">Other tools</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="add-rate">Daily Price Rate ($)</label>
+                    <input id="add-rate" type="number" min="1" class="form-control" placeholder="e.g. 150" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="add-desc">Description / Specs</label>
+                  <textarea id="add-desc" class="form-control text-area-desc" placeholder="Provide specs about engine, usage..." rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-accent btn-sm" id="add-eq-btn">Publish to Catalog</button>
+              </form>
+            </div>
+
+            <div id="owner-inventory-list" class="inventory-grid"></div>
+            <div id="owner-inventory-empty" class="empty-dashboard card hidden">
+              <span class="empty-emoji">🚜</span>
+              <h3>No equipment listed yet</h3>
+              <p>You haven't listed any of your farm machinery for rentals yet. Add your first item to start earning.</p>
+            </div>
+          </div>
+
+          <!-- Requests Tab Panel -->
+          <div id="panel-requests" class="hidden">
+            <h2>Rental Bookings Received</h2>
+            <div id="owner-requests-table-container" class="requests-table-wrapper card">
+              <table class="requests-table">
+                <thead>
+                  <tr>
+                    <th>Renter Farmer</th>
+                    <th>Equipment Model</th>
+                    <th>Rental Range</th>
+                    <th>Billing amount</th>
+                    <th>Current Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="owner-requests-tbody"></tbody>
+              </table>
+            </div>
+            <div id="owner-requests-empty" class="empty-dashboard card hidden">
+              <span class="empty-emoji">🌾</span>
+              <h3>No requests received</h3>
+              <p>You don't have any rental requests on your agricultural tools catalog listings yet.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <div class="logo-section">
+            <span class="logo-icon">🚜</span>
+            <span class="logo-text">Agri<span class="accent-text">Rent</span></span>
+          </div>
+          <p class="footer-tagline">
+            Empowering local farmers by optimizing equipment utilization and reducing capital overheads.
+          </p>
+        </div>
+        <div class="footer-links-grid">
+          <div class="footer-col">
+            <h4 class="footer-heading">Services</h4>
+            <ul class="footer-links">
+              <li><a href="#" onclick="navigateTo('catalog')">Browse Catalog</a></li>
+              <li><a href="#insurance">Rental Insurance</a></li>
+              <li><a href="#support">Equipment Support</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 class="footer-heading">Company</h4>
+            <ul class="footer-links">
+              <li><a href="#about">About Us</a></li>
+              <li><a href="#impact">Our Impact</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 AgriRent Inc. All rights reserved. Connecting farms, growing futures.</p>
+      </div>
+    </footer>
+    
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
